@@ -9,7 +9,7 @@ xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
     <property name="M_PI" value="3.1415926535897931" />
   
     <xacro:macro name="generic_camera" params="name parent *origin ros_topic cam_info_topic update_rate res_x res_y image_format hfov">
-      <joint name="${name}_roll" type="continuous">
+      <joint name="${name}_roll" type="revolute">
         <insert_block name="origin" />
         <parent link="${parent}"/>
         <child link="${name}_interm_link"/>
@@ -19,13 +19,14 @@ xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
 
       <link name="${name}_interm_link" >
 	<inertial>
-	  <mass value="0.0001" />
+	  <mass value="0.010" />
 	  <origin xyz="0 0 0" rpy="0 0 0" />
-          <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001" />
+	  <!-- assume a sphere of r = 1cm - 2/5 * mr^2 = 4e-7 -->
+          <inertia ixx="4e-7" ixy="0" ixz="0" iyy="4e-7" iyz="0" izz="4e-7" />
 	</inertial>
       </link>
 
-      <joint name="${name}_pitch" type="continuous">
+      <joint name="${name}_pitch" type="revolute">
         <insert_block name="origin" />
         <parent link="${name}_interm_link"/>
         <child link="${name}_link"/>
@@ -35,23 +36,29 @@ xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
 
       <link name="${name}_link">
         <inertial>
-          <mass value="0.001" />
+          <mass value="0.172" />
           <origin xyz="0 0 0" rpy="0 0 0" />
-          <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001" />
+	  <!-- x = depth
+	       y = width
+	       z = height
+	  solid cube = 1/12 * m( h^2 + w^2 ) - 0.000077
+	                    1/12 * m( h^2 + d^2 ) - 0.000037
+			    1/12 * m( w^2 + d^2 ) - 0.000065 -->
+          <inertia ixx="0.000077" ixy="0" ixz="0" iyy="0.00037" iyz="0" izz="0.000065" />
         </inertial>
         <visual>
           <origin xyz="0 0 0" rpy="0 0 0" />
           <geometry>
-            <box size="0.01 0.01 0.01" />
+            <box size="0.030 0.060 0.041" />
           </geometry>
-	  <material name="Blue">
-	    <color rgba="0.0 0.0 0.8 1"/>
+	  <material name="Grey">
+	    <color rgba="0.5 0.5 0.5 1"/>
 	  </material>
         </visual>
         <collision>
           <origin xyz="0 0 0" rpy="0 0 0" />
           <geometry>
-            <box size="0.01 0.01 0.01" />
+            <box size="0.030 0.060 0.041" />
           </geometry>
         </collision>
       </link>
