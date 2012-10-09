@@ -111,7 +111,7 @@ xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
         </controller:gazebo_ros_depth_camera>
       </sensor:camera>
       <turnGravityOff>true</turnGravityOff>
-      <material>PR2/Blue</material>
+      <material>white</material>
     </gazebo>
     </xacro:macro>
   </robot>
